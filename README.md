@@ -82,9 +82,14 @@ Tests are integrated into the CI pipeline to ensure application stability
 
 - Real-time seat availability using WebSockets
 - Online payment gateway integration
+- Booking available for unregistered users
 - Email confirmations for booking
 - Cinema analytics and reporting dashboard
 - Accessibility improvements
+- Personalized profile for community engagement
+- Reviews so users can rate movies
+- Audit log to track user activity
+- Ability to reset passwords
 
 ## 👤 Author / Purpose 
 
