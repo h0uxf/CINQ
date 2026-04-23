@@ -1,4 +1,5 @@
 import Router from 'express';
+// import { generateToken, verifyToken, sendToken } from '../middlewares/auth.middleware.js';
 import * as movieController from '../controllers/movie.controller.js';
 const router = Router();
 

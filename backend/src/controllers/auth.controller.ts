@@ -54,7 +54,7 @@ export const login = async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "No user found" });
     }
 
     const isValid = await bcrypt.compare(password, user.passwordHash);

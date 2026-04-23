@@ -6,6 +6,7 @@ import hallRoutes from './routes/hall.routes.js';
 import screeningRoutes from './routes/screening.routes.js';
 import bookingRoutes from './routes/booking.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import userRoutes from './routes/user.routes.js';
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use('/api/halls', hallRoutes);
 app.use('/api/screenings', screeningRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 
 export default app;

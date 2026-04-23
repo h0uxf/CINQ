@@ -1,20 +1,26 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
+import type { AuthRequest } from "../middlewares/auth.middleware.js";
 import prisma from "../services/prisma.js";
 
-export const getAllHalls = async (req: Request, res: Response) => {
+export const getAllHalls = async (req: AuthRequest, res: Response) => {
   const halls = await prisma.hall.findMany({
     orderBy: { name: "asc" },
+    include: { _count: { select: { seats: true } } },
   });
 
   res.json(halls);
 };
 
-export const getHallById = async (req: Request, res: Response) => {
+export const getHallById = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
   const hall = await prisma.hall.findUnique({
     where: { id: Number(id) },
-    include: { seats: true },
+    include: {
+      seats: {
+        orderBy: [{ rowLabel: "asc" }, { seatNumber: "asc" }],
+      },
+    },
   });
 
   if (!hall) {
@@ -24,11 +30,29 @@ export const getHallById = async (req: Request, res: Response) => {
   res.json(hall);
 };
 
-export const createHall = async (req: Request, res: Response) => {
-  const { name, totalSeats } = req.body;
+export const createHall = async (req: AuthRequest, res: Response) => {
+  const { name, seats } = req.body;
+  // seats: Array<{ rowLabel: string; seatNumber: number }>
+
+  if (!name) {
+    return res.status(400).json({ message: "Hall name is required" });
+  }
 
   const newHall = await prisma.hall.create({
-    data: { name, totalSeats: Number(totalSeats) },
+    data: {
+      name,
+      ...(seats?.length && {
+        seats: {
+          create: seats.map((s: { rowLabel: string; seatNumber: number }) => ({
+            rowLabel: s.rowLabel,
+            seatNumber: s.seatNumber,
+          })),
+        },
+      }),
+    },
+    include: {
+      seats: { orderBy: [{ rowLabel: "asc" }, { seatNumber: "asc" }] },
+    },
   });
 
   res.status(201).json(newHall);
