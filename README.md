@@ -34,6 +34,7 @@ This project aims to demonstrate practical full-stack development skills, includ
 - Express
 - Prisma ORM
 - PostgreSQL
+- Multer
 
 ### Authentication & Security
 - JSON Web Tokens (JWT)

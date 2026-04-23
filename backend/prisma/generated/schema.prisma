@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  MANAGER
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  EXPIRED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username String @unique
+  firstName    String
+  lastName     String
+  email        String     @unique
+  passwordHash String
+  role         Role       @default(USER)
+  bookings     Booking[]
+  createdAt    DateTime   @default(now())
+}
+
+model Movie {
+    id        Int      @id @default(autoincrement())
+  title           String
+  description     String
+  durationMinutes Int
+  posterUrl       String?
+  isActive        Boolean      @default(true)
+  screenings      Screening[]
+  createdAt       DateTime     @default(now())
+}
+
+model Hall {
+  id        Int      @id @default(autoincrement())
+  name       String
+  seats      Seat[]
+  screenings Screening[]
+}
+
+model Seat {
+  id        Int      @id @default(autoincrement())
+  rowLabel   String
+  seatNumber Int
+  hallId     Int
+  hall       Hall          @relation(fields: [hallId], references: [id])
+  bookings   BookingSeat[]
+
+  @@unique([hallId, rowLabel, seatNumber])
+}
+
+model Screening {
+  id        Int      @id @default(autoincrement())
+  movieId   Int
+  hallId    Int
+  startTime DateTime
+  endTime   DateTime
+  price     Float
+
+  movie     Movie      @relation(fields: [movieId], references: [id])
+  hall      Hall       @relation(fields: [hallId], references: [id])
+  bookings  Booking[]
+
+  createdAt DateTime   @default(now())
+}
+
+model Booking {
+  id        Int      @id @default(autoincrement())
+  userId      Int
+  screeningId Int
+  status      BookingStatus @default(PENDING)
+
+  user        User           @relation(fields: [userId], references: [id])
+  screening   Screening      @relation(fields: [screeningId], references: [id])
+  seats       BookingSeat[]
+
+  createdAt   DateTime       @default(now())
+}
+
+model BookingSeat {
+  id        Int      @id @default(autoincrement())
+  bookingId   Int
+  seatId      Int
+
+  booking     Booking   @relation(fields: [bookingId], references: [id])
+  seat        Seat      @relation(fields: [seatId], references: [id])
+
+  @@unique([bookingId, seatId])
+}
