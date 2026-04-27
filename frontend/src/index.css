@@ -1,3 +1,164 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* ── Design tokens ──────────────────────────────────────── */
+:root {
+  --bg:         #090807;
+  --surface:    #111009;
+  --surface2:   #1c1914;
+  --surface3:   #252018;
+  --accent:     #E7AB79;
+  --accent-dim: rgba(231,171,121,0.12);
+  --accent-mid: rgba(231,171,121,0.3);
+  --text:       #ede0c8;
+  --text-muted: #7a6d5a;
+  --text-sub:   #3d3528;
+  --border:     rgba(231,171,121,0.1);
+  --border2:    rgba(231,171,121,0.2);
+}
+
+html.light {
+  --bg:         #f2ebe0;
+  --surface:    #e8dece;
+  --surface2:   #ddd0bc;
+  --surface3:   #d0c4aa;
+  --accent:     #c47030;
+  --accent-dim: rgba(196,112,48,0.1);
+  --accent-mid: rgba(196,112,48,0.3);
+  --text:       #1a1208;
+  --text-muted: #6a5840;
+  --text-sub:   #b8a888;
+  --border:     rgba(100,75,40,0.14);
+  --border2:    rgba(100,75,40,0.28);
+}
+
+/* ── Base ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; overflow-x: hidden; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.4s, color 0.3s;
+}
+
+/* Grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+html.light body::after { opacity: 0.055; }
+
+::selection {
+  background: rgba(231,171,121,0.25);
+  color: var(--accent);
+}
+
+/* ── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--text-sub); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ── Animations ────────────────────────────────────────── */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes staggerIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(1);    opacity: 0.6; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes checkIn {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.page-in { animation: pageIn 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ── Inputs ────────────────────────────────────────────── */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="email"] {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 300;
+  outline: none;
+  transition: border-color 0.2s, background-color 0.4s;
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  -webkit-text-fill-color: var(--text);
+}
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus {
+  border-color: var(--accent-mid);
+  background: var(--surface3);
+}
+input::placeholder { color: var(--text-muted); opacity: 1; }
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 100px var(--surface2) inset;
+  -webkit-text-fill-color: var(--text);
+}
+
+/* ── Mobile nav overlay ────────────────────────────────── */
+.mobile-nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  animation: overlayIn 0.25s ease both;
+}
+
+/* ── Responsive helpers ────────────────────────────────── */
+@media (max-width: 768px) {
+  .hide-mobile { display: none !important; }
+  .show-mobile { display: flex !important; }
+}
+@media (min-width: 769px) {
+  .show-mobile { display: none !important; }
+}
