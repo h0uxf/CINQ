@@ -115,7 +115,13 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   passwordHash: 'passwordHash',
   role: 'role',
+  isActive: 'isActive',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.GenreScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
 };
 
 exports.Prisma.MovieScalarFieldEnum = {
@@ -124,6 +130,7 @@ exports.Prisma.MovieScalarFieldEnum = {
   description: 'description',
   durationMinutes: 'durationMinutes',
   posterUrl: 'posterUrl',
+  trailerUrl: 'trailerUrl',
   isActive: 'isActive',
   createdAt: 'createdAt'
 };
@@ -193,6 +200,7 @@ exports.BookingStatus = exports.$Enums.BookingStatus = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Genre: 'Genre',
   Movie: 'Movie',
   Hall: 'Hall',
   Seat: 'Seat',

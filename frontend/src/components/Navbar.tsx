@@ -151,7 +151,10 @@ export default function Navbar({ isDark, toggleTheme }: NavbarProps) {
                 </button>
                 {dropOpen && (
                   <div style={{ position: 'absolute', top: 'calc(100% + 8px)', right: 0, width: 180, background: 'var(--surface)', border: '1px solid var(--border)', zIndex: 200, animation: 'pageIn 0.2s cubic-bezier(0.22,1,0.36,1)' }}>
-                    {[{ label: 'My Bookings', path: '/profile' }, { label: 'Now Showing', path: '/listings' }].map(item => (
+                    {[
+                      { label: 'My Bookings', path: '/profile' },
+                      ...(['ADMIN', 'MANAGER'].includes(tokenUser?.role ?? '') ? [{ label: 'Admin Panel', path: '/admin' }] : []),
+                    ].map(item => (
                       <button
                         key={item.label}
                         onClick={() => navTo(item.path)}
@@ -213,6 +216,9 @@ export default function Navbar({ isDark, toggleTheme }: NavbarProps) {
           {token ? (
             <>
               <button onClick={() => navTo('/profile')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 10, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 500, fontFamily: "'DM Sans', sans-serif" }}>My Bookings</button>
+              {['ADMIN', 'MANAGER'].includes(tokenUser?.role ?? '') && (
+                <button onClick={() => navTo('/admin')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 10, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 500, fontFamily: "'DM Sans', sans-serif" }}>Admin Panel</button>
+              )}
               <button onClick={handleSignOut} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 10, letterSpacing: 3, textTransform: 'uppercase', color: '#c87070', fontWeight: 500, fontFamily: "'DM Sans', sans-serif" }}>Sign Out</button>
             </>
           ) : (

@@ -36,9 +36,13 @@ export default function SeatMap({ seats, bookedSeatIds, standardPrice, premiumPr
     onChange?.(updated);
   }
 
+  const W = isMobile ? 32 : 38;
+  const H = isMobile ? 24 : 28;
+  const FS = isMobile ? 6 : 7;
+
   return (
     <div style={{ overflowX: 'auto', paddingBottom: 8 }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, alignItems: 'center', minWidth: isMobile ? 460 : 'auto' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, alignItems: 'center', minWidth: isMobile ? 520 : 'auto' }}>
         {Object.entries(rows).map(([row, rowSeats]) => {
           const isPrem = PREMIUM_ROWS.has(row);
           return (
@@ -49,6 +53,7 @@ export default function SeatMap({ seats, bookedSeatIds, standardPrice, premiumPr
                   const isSel = !!selected.find(s => s.id === seat.id);
                   const isBooked = bookedSeatIds.includes(seat.id);
                   const addGap = ci === 6;
+                  const label = `${seat.rowLabel}${seat.seatNumber}`;
                   return (
                     <div key={seat.id} style={{ display: 'flex', alignItems: 'center' }}>
                       {addGap && <div style={{ width: isMobile ? 12 : 16 }} />}
@@ -56,18 +61,42 @@ export default function SeatMap({ seats, bookedSeatIds, standardPrice, premiumPr
                         onClick={() => toggleSeat(seat)}
                         title={isBooked ? 'Unavailable' : `${isPrem ? 'Premium' : 'Standard'} — £${isPrem ? premiumPrice : standardPrice}`}
                         style={{
-                          width: isMobile ? 24 : 28, height: isMobile ? 20 : 24,
+                          width: W, height: H,
                           background: isBooked ? 'var(--surface)' : isSel ? 'var(--accent)' : isPrem ? '#1e1608' : 'var(--surface2)',
                           border: '1px solid',
                           borderColor: isBooked ? 'var(--text-sub)' : isSel ? 'var(--accent)' : isPrem ? 'rgba(231,171,121,0.25)' : 'var(--border)',
                           cursor: isBooked ? 'not-allowed' : 'pointer',
-                          opacity: isBooked ? 0.22 : 1,
+                          opacity: isBooked ? 0.3 : 1,
                           transition: 'all 0.15s',
                           borderRadius: 3,
-                          transform: isSel ? 'scale(1.1)' : 'scale(1)',
+                          transform: isSel ? 'scale(1.08)' : 'scale(1)',
                           boxShadow: isSel ? '0 0 8px rgba(231,171,121,0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: 0,
+                          flexShrink: 0,
                         }}
-                      />
+                      >
+                        <span style={{
+                          fontSize: FS,
+                          fontWeight: 500,
+                          fontFamily: "'DM Sans', sans-serif",
+                          letterSpacing: 0,
+                          lineHeight: 1,
+                          color: isBooked
+                            ? 'var(--text-sub)'
+                            : isSel
+                            ? '#0c0800'
+                            : isPrem
+                            ? 'rgba(231,171,121,0.55)'
+                            : 'var(--text-muted)',
+                          userSelect: 'none',
+                          pointerEvents: 'none',
+                        }}>
+                          {label}
+                        </span>
+                      </button>
                     </div>
                   );
                 })}

@@ -23,37 +23,46 @@ enum BookingStatus {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username String @unique
+  id           Int       @id @default(autoincrement())
+  username     String    @unique
   firstName    String
   lastName     String
-  email        String     @unique
+  email        String    @unique
   passwordHash String
-  role         Role       @default(USER)
+  role         Role      @default(USER)
+  isActive     Boolean   @default(true)
   bookings     Booking[]
-  createdAt    DateTime   @default(now())
+  createdAt    DateTime  @default(now())
+}
+
+model Genre {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  movies Movie[]
 }
 
 model Movie {
-    id        Int      @id @default(autoincrement())
+  id              Int         @id @default(autoincrement())
   title           String
   description     String
   durationMinutes Int
   posterUrl       String?
-  isActive        Boolean      @default(true)
+  trailerUrl      String?
+  isActive        Boolean     @default(true)
+  genres          Genre[]
   screenings      Screening[]
-  createdAt       DateTime     @default(now())
+  createdAt       DateTime    @default(now())
 }
 
 model Hall {
-  id        Int      @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   name       String
   seats      Seat[]
   screenings Screening[]
 }
 
 model Seat {
-  id        Int      @id @default(autoincrement())
+  id         Int           @id @default(autoincrement())
   rowLabel   String
   seatNumber Int
   hallId     Int
@@ -64,40 +73,35 @@ model Seat {
 }
 
 model Screening {
-  id        Int      @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   movieId   Int
   hallId    Int
   startTime DateTime
   endTime   DateTime
   price     Float
-
-  movie     Movie      @relation(fields: [movieId], references: [id])
-  hall      Hall       @relation(fields: [hallId], references: [id])
+  movie     Movie         @relation(fields: [movieId], references: [id])
+  hall      Hall          @relation(fields: [hallId], references: [id])
   bookings  Booking[]
-
-  createdAt DateTime   @default(now())
+  createdAt DateTime      @default(now())
 }
 
 model Booking {
-  id        Int      @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   userId      Int
   screeningId Int
   status      BookingStatus @default(PENDING)
-
-  user        User           @relation(fields: [userId], references: [id])
-  screening   Screening      @relation(fields: [screeningId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
+  screening   Screening     @relation(fields: [screeningId], references: [id])
   seats       BookingSeat[]
-
-  createdAt   DateTime       @default(now())
+  createdAt   DateTime      @default(now())
 }
 
 model BookingSeat {
-  id        Int      @id @default(autoincrement())
-  bookingId   Int
-  seatId      Int
-
-  booking     Booking   @relation(fields: [bookingId], references: [id])
-  seat        Seat      @relation(fields: [seatId], references: [id])
+  id        Int     @id @default(autoincrement())
+  bookingId Int
+  seatId    Int
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  seat      Seat    @relation(fields: [seatId], references: [id])
 
   @@unique([bookingId, seatId])
 }

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-
 import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
 import Home from './pages/Home';
 import Listings from './pages/Listings';
 import MovieDetails from './pages/MovieDetails';
@@ -10,6 +11,14 @@ import Checkout from './pages/Checkout';
 import Confirmation from './pages/Confirmation';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
+import AdminLayout from './pages/Admin/AdminLayout';
+import Dashboard from './pages/Admin/Dashboard';
+import AdminMovies from './pages/Admin/Movies';
+import AdminHalls from './pages/Admin/Halls';
+import AdminScreenings from './pages/Admin/Screenings';
+import AdminUsers from './pages/Admin/Users';
+import AdminBookings from './pages/Admin/Bookings';
+import AdminGenres from './pages/Admin/Genres';
 
 const AUTH_ROUTES = ['/login', '/register', '/auth'];
 
@@ -47,6 +56,17 @@ export default function App() {
           <Route path="/login" element={<Auth />} />
           <Route path="/register" element={<Auth defaultMode="signup" />} />
           <Route path="/auth" element={<Auth />} />
+        </Route>
+
+        {/* Admin panel — protected, has its own layout with sidebar */}
+        <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+          <Route index element={<Dashboard />} />
+          <Route path="movies" element={<AdminMovies />} />
+          <Route path="halls" element={<AdminHalls />} />
+          <Route path="screenings" element={<AdminScreenings />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="bookings" element={<AdminBookings />} />
+          <Route path="genres" element={<AdminGenres />} />
         </Route>
       </Routes>
     </BrowserRouter>
