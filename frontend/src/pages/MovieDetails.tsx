@@ -91,7 +91,7 @@ export default function MovieDetails() {
   return (
     <div className="page-in" style={{ paddingTop: 64 }}>
       {showTrailer && (
-        <TrailerModal movieId={movie.id} movieTitle={movie.title} onClose={() => setShowTrailer(false)} />
+        <TrailerModal movieId={movie.id} movieTitle={movie.title} trailerUrl={movie.trailerUrl} onClose={() => setShowTrailer(false)} />
       )}
 
       {/* Hero strip */}

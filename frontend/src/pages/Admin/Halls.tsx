@@ -11,6 +11,60 @@ import Btn from '../../components/Btn';
 
 const ALL_ROWS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 const DEFAULT_FORM = { name: '', rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'], seatsPerRow: 14 };
+const PREMIUM_ROWS = new Set(['A', 'B', 'C']);
+
+function SeatPreview({ rows, seatsPerRow }: { rows: string[]; seatsPerRow: number }) {
+  if (rows.length === 0 || seatsPerRow < 1) return null;
+  const n = Math.min(seatsPerRow, 30);
+  const seatW = Math.max(4, Math.min(14, Math.floor(320 / (n + 2))));
+  const seatH = Math.round(seatW * 0.65);
+
+  return (
+    <div style={{ marginTop: 16, padding: '16px 12px 12px', background: 'var(--bg)', border: '1px solid var(--border)', overflowX: 'auto' }}>
+      {/* Screen bar */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 14, gap: 4 }}>
+        <div style={{ width: '55%', height: 3, background: 'var(--accent)', opacity: 0.25, borderRadius: 2 }} />
+        <div style={{ fontSize: 6, letterSpacing: 2.5, textTransform: 'uppercase', color: 'var(--text-sub)' }}>Screen</div>
+      </div>
+
+      {/* Rows */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 3, alignItems: 'center' }}>
+        {rows.map(row => {
+          const isPrem = PREMIUM_ROWS.has(row);
+          return (
+            <div key={row} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ fontSize: 6, color: isPrem ? 'var(--accent)' : 'var(--text-sub)', width: 10, textAlign: 'right', flexShrink: 0, opacity: 0.7 }}>{row}</span>
+              <div style={{ display: 'flex', gap: 2 }}>
+                {Array.from({ length: n }).map((_, ci) => {
+                  const addGap = ci === Math.floor(n / 2);
+                  return (
+                    <div key={ci} style={{ display: 'flex', alignItems: 'center' }}>
+                      {addGap && <div style={{ width: seatW * 0.6 }} />}
+                      <div style={{
+                        width: seatW,
+                        height: seatH,
+                        background: isPrem ? 'rgba(231,171,121,0.15)' : 'var(--surface2)',
+                        border: `1px solid ${isPrem ? 'rgba(231,171,121,0.3)' : 'var(--border)'}`,
+                        borderRadius: 1,
+                        flexShrink: 0,
+                      }} />
+                    </div>
+                  );
+                })}
+              </div>
+              <span style={{ fontSize: 6, color: isPrem ? 'var(--accent)' : 'transparent', width: 8, flexShrink: 0, opacity: 0.5 }}>P</span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ textAlign: 'center', marginTop: 10, fontSize: 7, letterSpacing: 1.5, color: 'var(--text-sub)', textTransform: 'uppercase' }}>
+        {rows.length} rows · {n} seats · {rows.length * n} total
+        {seatsPerRow > 30 ? ` (preview capped at 30)` : ''}
+      </div>
+    </div>
+  );
+}
 
 function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
@@ -105,13 +159,17 @@ function HallForm({
           <input
             type="number"
             min={1}
-            max={30}
+            max={50}
             value={form.seatsPerRow}
             onChange={e => setForm(f => ({ ...f, seatsPerRow: Number(e.target.value) }))}
             style={{ width: 100 }}
           />
           <span style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 1 }}>{total} total seats</span>
         </div>
+      </Field>
+
+      <Field label="Layout Preview">
+        <SeatPreview rows={form.rows} seatsPerRow={form.seatsPerRow} />
       </Field>
 
       {error && <p style={{ fontSize: 10, color: '#c87070', marginBottom: 12 }}>{error}</p>}

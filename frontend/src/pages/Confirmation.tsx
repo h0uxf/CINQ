@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useResponsive } from '../hooks/useResponsive';
 import Btn from '../components/Btn';
+import QRCode from '../components/QRCode';
 
 type SeatObj = { id: number; rowLabel: string; seatNumber: number };
 
@@ -71,18 +72,12 @@ export default function Confirmation() {
 
           <div style={{ height: 1, background: 'var(--border)', marginBottom: 18 }} />
 
-          {/* QR placeholder */}
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div style={{ width: 76, height: 76, background: 'var(--surface2)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-              <svg width="76" height="76" xmlns="http://www.w3.org/2000/svg">
-                <pattern id="qr-p" width="8" height="8">
-                  <rect width="4" height="4" fill="rgba(231,171,121,0.18)" />
-                  <rect x="4" y="4" width="4" height="4" fill="rgba(231,171,121,0.18)" />
-                </pattern>
-                <rect width="76" height="76" fill="url(#qr-p)" />
-              </svg>
-              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 6, letterSpacing: 1, color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.5 }}>QR<br />CODE</div>
+          {/* QR code */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+            <div style={{ padding: 10, background: 'var(--surface2)', border: '1px solid var(--border)' }}>
+              <QRCode value={bookingRef} size={126} />
             </div>
+            <div style={{ fontSize: 7, letterSpacing: 2, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Scan at the door</div>
           </div>
         </div>
 

@@ -101,9 +101,7 @@ export default function SeatMap({ seats, bookedSeatIds, standardPrice, premiumPr
                   );
                 })}
               </div>
-              {isPrem && (
-                <span style={{ fontSize: 7, letterSpacing: 2, color: 'var(--accent)', textTransform: 'uppercase', fontWeight: 500, opacity: 0.6, flexShrink: 0 }}>P</span>
-              )}
+              <span style={{ fontSize: 7, letterSpacing: 2, color: 'var(--accent)', textTransform: 'uppercase', fontWeight: 500, opacity: isPrem ? 0.6 : 0, flexShrink: 0, width: 12 }}>P</span>
             </div>
           );
         })}
